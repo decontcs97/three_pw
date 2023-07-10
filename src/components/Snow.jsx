@@ -42,14 +42,16 @@ const Snow = () => {
     scene.add(starFieldPoints);
 
     // Create the ground plane
-    const groundGeometry = new THREE.PlaneGeometry(2000, 2000);
-    const groundMaterial = new THREE.MeshBasicMaterial({ color: 0x333333 });
+    const groundGeometry = new THREE.PlaneGeometry(2000, 2000,8  ,8);
+    const groundMaterial = new THREE.MeshStandardMaterial({ color: 0xFFFFFF });
     const ground = new THREE.Mesh(groundGeometry, groundMaterial);
     ground.rotation.x = -Math.PI / 2; // Rotate the plane to lay flat
     scene.add(ground);
+    
+    console.log(ground)
 
-    // Adjust camera position
-    camera.position.z = 500;
+    camera.position.set(0, 0, 100);
+    camera.lookAt(ground.position);
 
     // Animation loop
     const animate = () => {
@@ -90,22 +92,6 @@ const Snow = () => {
       scene.remove(ground);
       renderer.dispose();
 
-    };
-  }, []);
-
-  useEffect(() => {
-    // Disable scrolling on mount
-    const handleScroll = (e) => {
-      e.preventDefault();
-    };
-
-    document.body.style.overflow = 'hidden';
-    document.addEventListener('scroll', handleScroll, { passive: false });
-
-    return () => {
-      // Re-enable scrolling on unmount
-      document.body.style.overflow = 'auto';
-      document.removeEventListener('scroll', handleScroll);
     };
   }, []);
 
