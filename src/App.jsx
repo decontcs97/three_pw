@@ -1,8 +1,10 @@
-import { Footer } from './components';
+import { Footer, Snow } from './components';
 import React from 'react';
 
 const App = () => (
-    <div></div>
+    <div className="m-0">
+        <Snow />
+    </div>
 
 )
 
