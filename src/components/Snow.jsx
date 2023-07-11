@@ -13,11 +13,36 @@ const Snow = () => {
     renderer = new THREE.WebGLRenderer({ antialias: true, canvas: canvasRef.current });
     renderer.setSize(window.innerWidth, window.innerHeight);
 
+    // Load snow texture for plane
+    const textureLoader = new THREE.TextureLoader();
     // Create the flat plane
-    const planeGeometry = new THREE.PlaneGeometry(200, 200);
-    const planeMaterial = new THREE.MeshBasicMaterial({ color: 0x336633 });
+    const planeGeometry = new THREE.PlaneGeometry(1000 , 1000);
+    const planeMaterial = new THREE.MeshBasicMaterial({ color: 0xF3F5F0 });
+
+
+    
+    const planeNewMaterial = new THREE.MeshStandardMaterial({
+      
+    })
+    textureLoader.load('/assets/SnowCOLOR.jpg',
+      function (texture) {
+        planeMaterial.map = texture;
+        planeMaterial.needsUpdate = true;
+      },
+      // Function called when download progresses
+      function ( xhr ) {
+        console.log( (xhr.loaded / xhr.total * 100) + '% loaded' );
+      },
+      // Function called when download errors
+      function ( xhr ) {
+        console.log( 'An error happened' );
+      }
+    );
+
     const planeMesh = new THREE.Mesh(planeGeometry, planeMaterial);
     scene.add(planeMesh);
+
+    planeMesh.rotation.x = -Math.PI / 2;
 
 
     // Create the starfield geometry
@@ -28,16 +53,16 @@ const Snow = () => {
       size: 1,
       transparent: true,
       blending: THREE.AdditiveBlending,
-      depthWrite: false // Allow the stars to render behind other objects
+      depthWrite: false 
     });
 
     const starPositions = new Float32Array(starCount * 3);
     const starVelocities = new Float32Array(starCount * 3);
     for (let i = 0; i < starCount; i++) {
       const i3 = i * 3;
-      starPositions[i3] = Math.random() * 2000 - 1000; // x position
-      starPositions[i3 + 1] = Math.random() * 2000 - 1000; // y position
-      starPositions[i3 + 2] = Math.random() * 2000 - 1000; // z position
+      starPositions[i3] = Math.random() * 2000 - 1000; // x 
+      starPositions[i3 + 1] = Math.random() * 2000 - 1000; // y 
+      starPositions[i3 + 2] = Math.random() * 2000 - 1000; // z 
 
       starVelocities[i3] = -Math.random() * 0.5; // x velocity
       starVelocities[i3 + 1] = -Math.random() * 0.5; // y velocity
