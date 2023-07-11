@@ -13,6 +13,13 @@ const Snow = () => {
     renderer = new THREE.WebGLRenderer({ antialias: true, canvas: canvasRef.current });
     renderer.setSize(window.innerWidth, window.innerHeight);
 
+    // Create the flat plane
+    const planeGeometry = new THREE.PlaneGeometry(200, 200);
+    const planeMaterial = new THREE.MeshBasicMaterial({ color: 0x336633 });
+    const planeMesh = new THREE.Mesh(planeGeometry, planeMaterial);
+    scene.add(planeMesh);
+
+
     // Create the starfield geometry
     const starCount = 1000;
     const starFieldGeometry = new THREE.BufferGeometry();
@@ -41,17 +48,9 @@ const Snow = () => {
     const starFieldPoints = new THREE.Points(starFieldGeometry, starFieldMaterial);
     scene.add(starFieldPoints);
 
-    // Create the ground plane
-    const groundGeometry = new THREE.PlaneGeometry(2000, 2000,8  ,8);
-    const groundMaterial = new THREE.MeshStandardMaterial({ color: 0xFFFFFF });
-    const ground = new THREE.Mesh(groundGeometry, groundMaterial);
-    ground.rotation.x = -Math.PI / 2; // Rotate the plane to lay flat
-    scene.add(ground);
-    
-    console.log(ground)
-
-    camera.position.set(0, 0, 100);
-    camera.lookAt(ground.position);
+    // Adjust camera position and look at the plane
+    camera.position.set(0, 100, 300);
+    camera.lookAt(planeMesh.position);
 
     // Animation loop
     const animate = () => {
@@ -89,7 +88,7 @@ const Snow = () => {
     return () => {
       window.removeEventListener('resize', handleResize);
       scene.remove(starFieldPoints);
-      scene.remove(ground);
+      scene.remove(planeMesh);
       renderer.dispose();
 
     };
