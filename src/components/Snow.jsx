@@ -1,11 +1,17 @@
 import React, { useEffect, useRef } from 'react';
 import * as THREE from 'three';
+import sColor from '../assets/Snow_004_COLOR.jpg'
+import sNorm from '../assets/Snow_004_NORM.jpg'
+import sDisp from '../assets/Snow_004_DISP.png'
+import sRough from '../assets/Snow_004_ROUGH.jpg'
 
 const Snow = () => {
   const canvasRef = useRef(null);
 
   useEffect(() => {
     let scene, camera, renderer;
+    const planeW = 200;
+    const planeH = 200;
 
     // Set up the scene
     scene = new THREE.Scene();
@@ -13,36 +19,47 @@ const Snow = () => {
     renderer = new THREE.WebGLRenderer({ antialias: true, canvas: canvasRef.current });
     renderer.setSize(window.innerWidth, window.innerHeight);
 
+    // Add ambient light
+    const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
+    scene.add(ambientLight);
+
+    // Add directional light
+    const directionalLight = new THREE.DirectionalLight(0xffffff, 0.5);
+    directionalLight.position.set(1, 1, 1);
+    scene.add(directionalLight);
+
     // Load snow texture for plane
     const textureLoader = new THREE.TextureLoader();
+    const sCol = textureLoader.load(sColor);
+    const sNor = textureLoader.load(sNorm);
+    const sDis = textureLoader.load(sDisp);
+    const sRo = textureLoader.load(sRough);
+
     // Create the flat plane
-    const planeGeometry = new THREE.PlaneGeometry(1000 , 1000);
-    const planeMaterial = new THREE.MeshBasicMaterial({ color: 0xF3F5F0 });
+    const planeGeometry = new THREE.PlaneGeometry(planeW, planeH, 1024, 1024);
+    const snowMaterial = new THREE.MeshStandardMaterial({
+      map: sCol,
+      normalMap: sNor,
+      displacementMap: sDis,
+      displacementScale: 5.5,
+      roughnessMap: sRo
+    });
 
-
+    //EDIT: MAKE A LOOP TO DO THIS...JUST LAZY RIGHT NOW
+    const planeMesh = new THREE.Mesh(planeGeometry, snowMaterial);
+    const planeMesh2 = new THREE.Mesh(planeGeometry, snowMaterial); 
+    const planeMesh3 = new THREE.Mesh(planeGeometry, snowMaterial);
+    const planeMesh4 = new THREE.Mesh(planeGeometry, snowMaterial);
+    const planeMesh5 = new THREE.Mesh(planeGeometry, snowMaterial);
+    const planeMesh6 = new THREE.Mesh(planeGeometry, snowMaterial);
     
-    const planeNewMaterial = new THREE.MeshStandardMaterial({
-      
-    })
-    textureLoader.load('/assets/SnowCOLOR.jpg',
-      function (texture) {
-        planeMaterial.map = texture;
-        planeMaterial.needsUpdate = true;
-      },
-      // Function called when download progresses
-      function ( xhr ) {
-        console.log( (xhr.loaded / xhr.total * 100) + '% loaded' );
-      },
-      // Function called when download errors
-      function ( xhr ) {
-        console.log( 'An error happened' );
-      }
-    );
-
-    const planeMesh = new THREE.Mesh(planeGeometry, planeMaterial);
     scene.add(planeMesh);
-
     planeMesh.rotation.x = -Math.PI / 2;
+    planeMesh.position.set(0,0,0);
+
+    scene.add(planeMesh3);
+    planeMesh3.rotation.x = -Math.PI / 2;
+    planeMesh3.position.set(0,0,planeW - 1);
 
 
     // Create the starfield geometry
@@ -114,6 +131,8 @@ const Snow = () => {
       window.removeEventListener('resize', handleResize);
       scene.remove(starFieldPoints);
       scene.remove(planeMesh);
+      scene.remove(ambientLight);
+      scene.remove(directionalLight);
       renderer.dispose();
 
     };
