@@ -100,7 +100,7 @@ const Snow = () => {
     };
 
     animate();
-
+/*
     // Handle window resize
     const handleResize = () => {
       camera.aspect = window.innerWidth / window.innerHeight;
@@ -120,6 +120,7 @@ const Snow = () => {
       renderer.dispose();
 
     };
+    */
   }, []);
 
   return <canvas ref={canvasRef} style={{ position: 'fixed', top: 0, left: 0, zIndex: -1 }} />;
